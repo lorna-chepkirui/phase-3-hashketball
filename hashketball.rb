@@ -127,3 +127,93 @@ def game_hash
 end
 
 # Write code here
+# Start Helper functions
+def player(name)
+  pls = game_hash.map do |team|
+       team[1][:players].flatten(3).find { |player| player[:player_name] == name}
+   end
+   pls.compact
+ end
+ 
+ def players
+   pls = game_hash.map do |team|
+       team[1][:players]
+    end
+    pls.compact.flatten(4)
+  end
+ 
+ def teams
+   tms = game_hash.map do |team|
+   {
+     "team_name"=>team[1][:team_name],
+     "team_colors"=>team[1][:colors],
+   }
+ end
+ tms.compact
+ end
+
+ def players_team(name)
+  game_hash.map do |data|
+    {
+      "team_name"=> data[1][:team_name],
+      "players"=> data[1][:players]
+    }
+  end
+ end
+
+ def players_shoe_rebounds
+  players.map { |player| {"player"=>player[:player_name], "rebounds"=>player[:rebounds], "shoe"=>player[:shoe]}}
+ end
+
+ def player_with_highest_rebounds
+  max_shoe = 0
+  rebounds = 0
+  players_shoe_rebounds.filter do |rebound|
+    if rebound["shoe"] > max_shoe
+      max_shoe = rebound["shoe"]
+      rebounds = rebound["rebounds"]
+    end
+  end
+  rebounds
+ end
+
+# End Helper functions
+
+def shoe_size(player_name)
+   player(player_name)[0][:shoe]
+end
+
+def num_points_scored(player_name)
+  player(player_name)[0][:points]
+end
+
+def player_stats(player_name)
+  player(player_name)[0]
+end
+
+def team_colors(t_name)
+ teams().find { |team| team["team_name"] == t_name }["team_colors"]
+end
+
+def team_names
+ game_hash.map { |team| team[1][:team_name]}
+end
+
+def team_numbers(team_name)
+game_hash.find { |team| team[1][:team_name] == team_name }[1][:players]
+end
+
+
+def player_numbers(team_name)
+ team_numbers(team_name).map do |player|
+   player[:number]
+ end
+end
+
+
+def big_shoe_rebounds
+  player_with_highest_rebounds
+end
+
+
+pp big_shoe_rebounds
